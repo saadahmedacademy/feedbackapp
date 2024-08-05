@@ -10,7 +10,7 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "Credentials",
       credentials: {
-        email: { label: "Username", type: "text ", placeholder: "jsmith" },
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any): Promise<any> {
@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!user) {
-            throw new Error("User not found for sign in ");
+            throw new Error("User not found for sign in");
           }
 
           if (!user.isVerified) {
@@ -38,22 +38,36 @@ export const authOptions: NextAuthOptions = {
           );
 
           if (!isPasswordCorrect) {
-            throw new Error("Invalid password to sign in");
+            throw new Error("Invalid password for sign in");
           }
 
           return user;
         } catch (error) {
-          console.error(`Signin failed:  ${error}`);
+          console.error(`Signin failed: ${error}`);
+          throw new Error("Signin failed");
         }
       },
     }),
   ],
+
   callbacks: {
     async jwt({ token, user }) {
-
+      if (user) {
+        token._id = user._id?.toString();
+        token.username = user.username;
+        token.isAcceptingMessage = user.isAcceptingMessage;
+        token.isVerified = user.isVerified;
+      }
+      return token;
     },
     async session({ session, token }) {
-        
+      if (token) {
+        session.user._id = token._id;
+        session.user.username = token.username;
+        session.user.isAcceptingMessage = token.isAcceptingMessage;
+        session.user.isVerified = token.isVerified;
+      }
+      return session;
     },
   },
   pages: {
