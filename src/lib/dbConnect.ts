@@ -16,8 +16,6 @@ export const dbConnect = async () => {
         const db = await mongoose.connect(process.env.MONGODB_URI || "", {
             dbName: 'feedback', // Add your actual database name here
         } as ConnectOptions);
-
-        console.log(`db:`, db);
         connection.isConnected = db.connections[0].readyState;
 
         console.log(`MongoDB connected successfully`);
