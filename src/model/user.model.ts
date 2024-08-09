@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 // message Schema
-export interface Message extends Document {
+export interface Messages extends Document {
   content: string;
   createdAt: Date;
 }
-const messageSchema: Schema<Message> = new Schema({
+const messageSchema: Schema<Messages> = new Schema({
   content: {
     type: String,
     required: true,
@@ -26,7 +26,7 @@ export interface User extends Document {
   verifyCodeExpire: Date;
   isVerified: boolean;
   isAcceptingMessage: boolean;
-  messages: Message[];
+  messages: Messages[];
 }
 
 // To create the regex
@@ -69,5 +69,5 @@ const userSchema: Schema<User> = new Schema({
 });
 
 // To export the model
-export const Message = mongoose.models.Message as mongoose.Model<Message> || mongoose.model<Message>("Message", messageSchema);
+export const Message = mongoose.models.Message as mongoose.Model<Messages> || mongoose.model<Messages>("Message", messageSchema);
 export const User = mongoose.models.User as mongoose.Model<User> || mongoose.model<User>("User", userSchema);
